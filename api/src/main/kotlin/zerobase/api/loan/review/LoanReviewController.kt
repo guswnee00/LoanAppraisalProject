@@ -8,15 +8,15 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/fintech/api/v1")
-class LoanReviewController (
-    private val loanReviewService: LoanReviewService
+class LoanReviewController(
+    private val loanReviewServiceImpl: LoanReviewServiceImpl
 ) {
     @GetMapping("review/{userKey}")
     fun getReviewData(
         @PathVariable userKey: String
     ): ResponseEntity<LoanReviewDto.LoanReviewResponseDto> {
         return ResponseEntity.ok(
-            loanReviewService.loanReviewMain(userKey)
+            loanReviewServiceImpl.loanReviewMain(userKey)
         )
     }
 }

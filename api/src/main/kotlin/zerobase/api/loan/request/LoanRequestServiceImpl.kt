@@ -7,27 +7,36 @@ import zerobase.domain.repository.UserInfoRepository
 
 @Service
 class LoanRequestServiceImpl(
-        private val generateKey: GenerateKey,
-        private val userInfoRepository: UserInfoRepository,
-        private val encryptComponent: EncryptComponent
+    private val generateKey: GenerateKey,
+    private val userInfoRepository: UserInfoRepository,
+    private val encryptComponent: EncryptComponent,
+    private val loanRequestSender: LoanRequestSender
 ): LoanRequestService {
+
     override fun loanRequestMain(
-            loanRequestInputDto: LoanRequestDto.LoanRequestInputDto
+        loanRequestInputDto: LoanRequestDto.LoanRequestInputDto
     ): LoanRequestDto.LoanRequestResponseDto {
         val userKey = generateKey.generateUserKey()
+
         loanRequestInputDto.userRegistrationNumber =
             encryptComponent.encryptString(loanRequestInputDto.userRegistrationNumber)
-        saveUserInfo(loanRequestInputDto.toUserInfoDto(userKey))
-        loanRequestReview(userKey)
+
+        val userInfoDto = loanRequestInputDto.toUserInfoDto(userKey)
+
+        saveUserInfo(userInfoDto)
+
+        loanRequestReview(userInfoDto)
 
         return LoanRequestDto.LoanRequestResponseDto(userKey)
     }
 
-    override fun saveUserInfo(userInfoDto: UserInfoDto) = userInfoRepository.save(userInfoDto.toEntity())
+    override fun saveUserInfo(userInfoDto: UserInfoDto) =
+        userInfoRepository.save(userInfoDto.toEntity())
 
-
-    override fun loanRequestReview(userKey: String) {
-        TODO("Not yet implemented")
+    override fun loanRequestReview(userInfoDto: UserInfoDto) {
+        loanRequestSender.sendMessage(
+            KafkaTopic.LOAN_REQUEST,
+            userInfoDto.toLoanRequestKafkaDto()
+        )
     }
-
 }

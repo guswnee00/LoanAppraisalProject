@@ -2,6 +2,8 @@ package zerobase.api.loan.review
 
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
+import zerobase.api.exception.CustomErrorCode
+import zerobase.api.exception.CustomException
 import zerobase.domain.domain.LoanReview
 import zerobase.domain.repository.LoanReviewRepository
 

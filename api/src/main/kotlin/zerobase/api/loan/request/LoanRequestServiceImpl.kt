@@ -2,17 +2,21 @@ package zerobase.api.loan.request
 
 import org.springframework.stereotype.Service
 import zerobase.api.loan.GenerateKey
+import zerobase.api.loan.encrypt.EncryptComponent
 import zerobase.domain.repository.UserInfoRepository
 
 @Service
 class LoanRequestServiceImpl(
         private val generateKey: GenerateKey,
-        private val userInfoRepository: UserInfoRepository
+        private val userInfoRepository: UserInfoRepository,
+        private val encryptComponent: EncryptComponent
 ): LoanRequestService {
     override fun loanRequestMain(
             loanRequestInputDto: LoanRequestDto.LoanRequestInputDto
     ): LoanRequestDto.LoanRequestResponseDto {
         val userKey = generateKey.generateUserKey()
+        loanRequestInputDto.userRegistrationNumber =
+            encryptComponent.encryptString(loanRequestInputDto.userRegistrationNumber)
         saveUserInfo(loanRequestInputDto.toUserInfoDto(userKey))
         loanRequestReview(userKey)
 

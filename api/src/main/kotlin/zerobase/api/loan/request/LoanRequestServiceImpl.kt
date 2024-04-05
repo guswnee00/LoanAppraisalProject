@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service
 import zerobase.api.loan.GenerateKey
 import zerobase.api.loan.encrypt.EncryptComponent
 import zerobase.domain.repository.UserInfoRepository
+import zerobase.kafka.enum.KafkaTopic
+import zerobase.kafka.producer.LoanRequestSender
 
 @Service
 class LoanRequestServiceImpl(

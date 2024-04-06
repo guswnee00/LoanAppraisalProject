@@ -2,6 +2,7 @@ package zerobase.consumer.service
 
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.stereotype.Service
+import zerobase.consumer.dto.ReviewResponseDto
 import zerobase.domain.domain.LoanReview
 import zerobase.domain.repository.LoanReviewRepository
 import zerobase.kafka.dto.LoanRequestDto
